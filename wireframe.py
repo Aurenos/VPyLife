@@ -83,11 +83,11 @@ if __name__ == '__main__': # For fun and testing purposes
 	scene.height=800
 	scene.width=800
 	scene.range = 5
-	var = 10
-	test = WireFrameGrid(length = var, width = var-5, height = var-8, thickness=0.005, color=color.green,
+	var = 1
+	test = WireFrameGrid(length = var, width = var, height = var, thickness=0.005, color=color.green,
 		animate_gen=False, animate_rate=20)
 	test.generate() 
-	# box(color=color.black, material=None, frame=test.frame, length=var-0.01, height=var-0.01, width=var-0.01)
+	box(color=color.green, material=materials.emissive, frame=test.frame, length=var, height=var, width=var)
 
 	## Just for fun
 	# ax = randrange(0,10,1)
