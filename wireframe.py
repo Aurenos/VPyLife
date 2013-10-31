@@ -1,4 +1,4 @@
-from visual import *
+from visual import frame, curve, materials, color, rate, scene, box
 from random import randrange
 
 class WireFrameGrid:
@@ -22,7 +22,13 @@ class WireFrameGrid:
 
 	@property
 	def volume(self):
-	    return self.length * self.width * self.height
+	    return self.length * self.width * self.height # The number of boxes
+
+	def set_pos(self, value):
+		self.pos = value
+		self.x = pos[0]
+		self.y = pos[1]
+		self.z = pos[2]
 
 	def set_visibility(self, val):
 		self.visible = val
@@ -74,13 +80,14 @@ class WireFrameGrid:
 			mult = 0				
 
 if __name__ == '__main__': # For fun and testing purposes
-	scene.height=640
-	scene.width=640
+	scene.height=800
+	scene.width=800
+	scene.range = 5
 	var = 10
-	test = WireFrameGrid(length = var, width = var-9, height = var-2, thickness=0, color=color.green,
-		animate_gen=True, animate_rate=30)
-	# box(color=color.black, material=None, frame=test.frame, length=var-0.01, height=var-0.01, width=var-0.01)
+	test = WireFrameGrid(length = var, width = var-5, height = var-8, thickness=0.005, color=color.green,
+		animate_gen=False, animate_rate=20)
 	test.generate() 
+	# box(color=color.black, material=None, frame=test.frame, length=var-0.01, height=var-0.01, width=var-0.01)
 
 	## Just for fun
 	# ax = randrange(0,10,1)
