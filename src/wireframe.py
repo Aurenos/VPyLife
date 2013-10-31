@@ -2,7 +2,6 @@
 # Kile Deal
 
 from visual import frame, curve, materials, color, rate, scene, box
-from random import randrange
 
 class WireFrameGrid:
 	def __init__(self, scale=1, length=1, width=1, height=1, pos=(0,0,0), visible=True,
