@@ -4,6 +4,7 @@
 from visual import * 
 from cell import Cell
 from wireframe import WireFrameGrid
+from random import random as rand
 
 class Environment:
 	def __init__(self, length=10, width=10, height=10, grid_color=color.white, material=None,
@@ -39,7 +40,7 @@ class Environment:
 		y = 1
 		z = 1
 		for i in xrange(self.grid.volume):
-			rate(4)
+			# rate(100)
 			if x > self.length*(self.scale*2):
 
 				y += 2
@@ -49,7 +50,7 @@ class Environment:
 					z += 2
 					y = 1
 
-			Cell(color=color.green, material=materials.glass,
+			Cell(color=(rand(), rand(), rand()), material=materials.glass,
 						pos=(-self.length/2.0+sref*x, -self.height/2.0+sref*y, -self.width/2.0+sref*z))
 
 			x += 2
