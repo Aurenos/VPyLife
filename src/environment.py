@@ -34,4 +34,25 @@ class Environment:
 			self.grid.set_visibility(True)
 
 	def fill_grid(self):
-		pass
+		sref = self.scale/2.0
+		x = 1
+		y = 1
+		z = 1
+		for i in xrange(self.grid.volume):
+			rate(4)
+			if x > self.length*(self.scale*2):
+
+				y += 2
+				x = 1
+
+				if y > self.height*(self.scale*2):
+					z += 2
+					y = 1
+
+			Cell(color=color.green, material=materials.glass,
+						pos=(-self.length/2.0+sref*x, -self.height/2.0+sref*y, -self.width/2.0+sref*z))
+
+			x += 2
+
+		# box(color=color.green, material=materials.glass,
+		# 		pos=(-self.length/2.0+sref, -self.height/2.0+sref, -self.width/2.0+sref))
