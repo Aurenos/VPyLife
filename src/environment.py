@@ -40,7 +40,7 @@ class Environment:
 		y = 1
 		z = 1
 		for i in xrange(self.grid.volume):
-			# rate(100)
+			# rate(10)
 			if x > self.length*(self.scale*2):
 
 				y += 2
@@ -50,10 +50,10 @@ class Environment:
 					z += 2
 					y = 1
 
-			Cell(color=(rand(), rand(), rand()), material=materials.glass,
+			newcell = Cell(color=color.green, material=materials.glass,
 						pos=(-self.length/2.0+sref*x, -self.height/2.0+sref*y, -self.width/2.0+sref*z))
+
+			self.cells.append(newcell)
 
 			x += 2
 
-		# box(color=color.green, material=materials.glass,
-		# 		pos=(-self.length/2.0+sref, -self.height/2.0+sref, -self.width/2.0+sref))
