@@ -27,6 +27,7 @@ class Environment:
 
 		self.cells = None
 		self.fill_grid()
+		self.link_cells()
 
 	def toggle_grid(self):
 		if self.grid.visible:
@@ -85,6 +86,14 @@ class Environment:
 		# pprint.pprint(cellmatrix)
 
 	def link_cells(self):
-		pass
+		for z in xrange(self.width):
+			for y in xrange(self.height):
+				for x in xrange(self.length):
+					self.cells[z][y][x].rightlink = self.cells[z][y][x+1] if x + 1 < self.length else None
+					self.cells[z][y][x].leftlink  = self.cells[z][y][x-1] if x - 1 >= 0 else None
+					self.cells[z][y][x].uplink    = self.cells[z][y+1][x] if y + 1 < self.height else None
+					self.cells[z][y][x].downlink  = self.cells[z][y-1][x] if y - 1 >= 0 else None
+					self.cells[z][y][x].frontlink = self.cells[z+1][y][x] if z + 1 < self.width else None
+					self.cells[z][y][x].backlink  = self.cells[z-1][y][x] if z - 1 >= 0 else None
 			
 
