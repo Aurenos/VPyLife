@@ -27,7 +27,7 @@ class Environment:
 
 		self.cells = None
 		self.fill_grid()
-		self.link_cells()
+		# self.link_cells()
 
 	def toggle_grid(self):
 		if self.grid.visible:
@@ -53,37 +53,50 @@ class Environment:
 					z += 2
 					y = 1
 
-			newcell = Cell(color=color.green, material=materials.glass,
+			newcell = Cell(color=color.green, material=materials.glass, visible=False,
 						pos=(-self.length/2.0+sref*x, -self.height/2.0+sref*y, -self.width/2.0+sref*z))
 
 			c.append(newcell)
 
 			x += 2
-
-		cellmatrix = [[[None]*self.length]*self.height]*self.width
+		pprint.pprint(c)
+		self.cells = [[[None]*self.length]*self.height]*self.width
 		
 		count = 0
-		x = 0
-		y = 0
-		z = 0
+
+		for z in xrange(self.width):
+			for y in xrange(self.height):
+				for x in xrange(self.length):
+					# rate(1)
+					self.cells[z][y][x] = c[count]
+					# print c[count]
+					# self.cells[z][y][x].visible = True
+					count += 1
+		# pprint.pprint(self.cells)
+		# x = 0
+		# y = 0
+		# z = 0
 		
-		
-		while count < len(c):
+		print self.cells[0][0][0] == c[0]
+		# while count < len(c):
+		# 	rate(1)
+		# 	self.cells[z][y][x] = c[count]
+		# 	# cellmatrix[z][y][x].visible = True
+		# 	self.cells[0][0][0].visible = True
+		# 	print self.cells[0][0][0]
+		# 	# print "Z: %d, Y: %d, X: %d" % (z, y, x)
+		# 	count += 1
+		# 	x += 1
+		# 	if x >= self.length:
+		# 		x = 0
+		# 		y += 1
 
-			cellmatrix[z][y][x] = c[count]
-			count += 1
-			x += 1
-			if x >= self.length:
-				x = 0
-				y += 1
+		# 		if y >= self.height:
+		# 			y = 0
+		# 			z += 1
 
-				if y >= self.height:
-					y = 0
-					z += 1
-
-		self.cells = cellmatrix
-
-		# pprint.pprint(cellmatrix)
+		# self.cells = cellmatrix
+		# self.cells[0][0][0].visible = True
 
 	def link_cells(self):
 		for z in xrange(self.width):
