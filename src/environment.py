@@ -4,7 +4,7 @@
 from visual import * 
 from cell import Cell
 from wireframe import WireFrameGrid
-from random import random as rand
+import pprint
 
 class Environment:
 	def __init__(self, length=10, width=10, height=10, grid_color=color.white, material=None,
@@ -25,7 +25,7 @@ class Environment:
 
 		self.grid.generate()
 
-		self.cells = []
+		self.cells = None
 		self.fill_grid()
 
 	def toggle_grid(self):
@@ -39,10 +39,12 @@ class Environment:
 		x = 1
 		y = 1
 		z = 1
+		c = []
+		row = 0
+		column = 0
 		for i in xrange(self.grid.volume):
 			# rate(10)
 			if x > self.length*(self.scale*2):
-
 				y += 2
 				x = 1
 
@@ -53,7 +55,36 @@ class Environment:
 			newcell = Cell(color=color.green, material=materials.glass,
 						pos=(-self.length/2.0+sref*x, -self.height/2.0+sref*y, -self.width/2.0+sref*z))
 
-			self.cells.append(newcell)
+			c.append(newcell)
 
 			x += 2
+
+		cellmatrix = [[[None]*self.length]*self.height]*self.width
+		
+		count = 0
+		x = 0
+		y = 0
+		z = 0
+		
+		
+		while count < len(c):
+
+			cellmatrix[z][y][x] = c[count]
+			count += 1
+			x += 1
+			if x >= self.length:
+				x = 0
+				y += 1
+
+				if y >= self.height:
+					y = 0
+					z += 1
+
+		self.cells = cellmatrix
+
+		# pprint.pprint(cellmatrix)
+
+	def link_cells(self):
+		pass
+			
 
