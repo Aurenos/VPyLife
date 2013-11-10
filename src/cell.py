@@ -32,3 +32,5 @@ class Cell(box):
 	def __str__(self):
 		return "Cell %3d" % self.id
 
+
+

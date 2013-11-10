@@ -5,6 +5,7 @@ from visual import *
 from cell import Cell
 from wireframe import WireFrameGrid
 import pprint
+import copy
 
 class Environment:
 	def __init__(self, length=10, width=10, height=10, grid_color=color.white, material=None,
@@ -27,7 +28,7 @@ class Environment:
 
 		self.cells = None
 		self.fill_grid()
-		# self.link_cells()
+		self.link_cells()
 
 	def toggle_grid(self):
 		if self.grid.visible:
@@ -59,44 +60,9 @@ class Environment:
 			c.append(newcell)
 
 			x += 2
-		pprint.pprint(c)
-		self.cells = [[[None]*self.length]*self.height]*self.width
-		
-		count = 0
 
-		for z in xrange(self.width):
-			for y in xrange(self.height):
-				for x in xrange(self.length):
-					# rate(1)
-					self.cells[z][y][x] = c[count]
-					# print c[count]
-					# self.cells[z][y][x].visible = True
-					count += 1
-		# pprint.pprint(self.cells)
-		# x = 0
-		# y = 0
-		# z = 0
-		
-		print self.cells[0][0][0] == c[0]
-		# while count < len(c):
-		# 	rate(1)
-		# 	self.cells[z][y][x] = c[count]
-		# 	# cellmatrix[z][y][x].visible = True
-		# 	self.cells[0][0][0].visible = True
-		# 	print self.cells[0][0][0]
-		# 	# print "Z: %d, Y: %d, X: %d" % (z, y, x)
-		# 	count += 1
-		# 	x += 1
-		# 	if x >= self.length:
-		# 		x = 0
-		# 		y += 1
-
-		# 		if y >= self.height:
-		# 			y = 0
-		# 			z += 1
-
-		# self.cells = cellmatrix
-		# self.cells[0][0][0].visible = True
+		self.cells = array(c).reshape(self.width, self.height, self.length)
+		pprint.pprint(self.cells)
 
 	def link_cells(self):
 		for z in xrange(self.width):
