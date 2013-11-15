@@ -4,25 +4,24 @@
 from visual import * 
 from cell import Cell
 from wireframe import WireFrameGrid
-import pprint
-import copy
 
 class Environment:
-	def __init__(self, length=10, width=10, height=10, grid_color=color.white, material=None,
-				visible=True, thickness=0, scale=1, cell_color=color.green):
+	def __init__(self, length=10, width=10, height=10, grid_color=color.white, grid_material=None,
+				visible=True, thickness=0, scale=1, cell_color=color.green, cell_material=None):
 		self.length = length
 		self.width = width
 		self.height = height
 		self.grid_color = grid_color
-		self.material = material
+		self.grid_material = grid_material
 		self.visible = visible
 		self.thickness = thickness
 		self.scale = scale
 		self.cell_color = cell_color
+		self.cell_material = cell_material
 
 		self.grid = WireFrameGrid(length=self.length, width=self.width, height=self.height,
 			color=self.grid_color, visible=self.visible, thickness=self.thickness, 
-			scale=self.scale, material=self.material)
+			scale=self.scale, material=self.grid_material)
 
 		self.grid.generate()
 
@@ -54,7 +53,7 @@ class Environment:
 					z += 2
 					y = 1
 
-			newcell = Cell(color=color.green, material=materials.glass, visible=False,
+			newcell = Cell(color=self.cell_color, material=self.cell_material, visible=False,
 						pos=(-self.length/2.0+sref*x, -self.height/2.0+sref*y, -self.width/2.0+sref*z))
 
 			c.append(newcell)
@@ -62,7 +61,6 @@ class Environment:
 			x += 2
 
 		self.cells = array(c).reshape(self.width, self.height, self.length)
-		pprint.pprint(self.cells)
 
 	def link_cells(self):
 		for z in xrange(self.width):
