@@ -66,11 +66,31 @@ class Environment:
 		for z in xrange(self.width):
 			for y in xrange(self.height):
 				for x in xrange(self.length):
-					self.cells[z][y][x].rightlink = self.cells[z][y][x+1] if x + 1 < self.length else None
-					self.cells[z][y][x].leftlink  = self.cells[z][y][x-1] if x - 1 >= 0 else None
-					self.cells[z][y][x].uplink    = self.cells[z][y+1][x] if y + 1 < self.height else None
-					self.cells[z][y][x].downlink  = self.cells[z][y-1][x] if y - 1 >= 0 else None
-					self.cells[z][y][x].frontlink = self.cells[z+1][y][x] if z + 1 < self.width else None
-					self.cells[z][y][x].backlink  = self.cells[z-1][y][x] if z - 1 >= 0 else None
+					self.cells[z][y][x].link_r   = self.cells[z][y][x+1] 	 if x + 1 < self.length else None
+					self.cells[z][y][x].link_l   = self.cells[z][y][x-1] 	 if x - 1 >= 0 else None
+					self.cells[z][y][x].link_u   = self.cells[z][y+1][x] 	 if y + 1 < self.height else None
+					self.cells[z][y][x].link_d   = self.cells[z][y-1][x] 	 if y - 1 >= 0 else None
+					self.cells[z][y][x].link_f   = self.cells[z+1][y][x] 	 if z + 1 < self.width else None
+					self.cells[z][y][x].link_b   = self.cells[z-1][y][x] 	 if z - 1 >= 0 else None
+					self.cells[z][y][x].link_ul  = self.cells[z][y+1][x-1]   if y + 1 < self.height and x - 1 >= 0 else None
+					self.cells[z][y][x].link_ur  = self.cells[z][y+1][x+1]   if y + 1 < self.height and x + 1 < self.length else None
+					self.cells[z][y][x].link_dl  = self.cells[z][y-1][x-1]   if y - 1 >= 0 and x - 1 >= 0 else None
+					self.cells[z][y][x].link_dr  = self.cells[z][y-1][x+1]   if y - 1 >= 0 and x + 1 < self.length else None
+					self.cells[z][y][x].link_fu  = self.cells[z+1][y+1][x]   if z + 1 < self.width and y + 1 < self.height else None
+					self.cells[z][y][x].link_fd  = self.cells[z+1][y-1][x]   if z + 1 < self.width and y - 1 >= 0 else None
+					self.cells[z][y][x].link_fl  = self.cells[z+1][y][x-1]   if z + 1 < self.width and x - 1 >= 0 else None
+					self.cells[z][y][x].link_fr  = self.cells[z+1][y][x+1]   if z + 1 < self.width and x + 1 < self.length else None
+					self.cells[z][y][x].link_bu  = self.cells[z-1][y+1][x]   if z - 1 >= 0 and y + 1 < self.height else None
+					self.cells[z][y][x].link_bd  = self.cells[z-1][y-1][x]   if z - 1 >= 0 and y - 1 >= 0 else None
+					self.cells[z][y][x].link_bl  = self.cells[z-1][y][x-1]   if z - 1 >= 0 and x - 1 >= 0 else None
+					self.cells[z][y][x].link_br  = self.cells[z-1][y][x+1]   if z - 1 >= 0 and x + 1 < self.length else None
+					self.cells[z][y][x].link_ful = self.cells[z+1][y+1][x-1] if z + 1 < self.width and y + 1 < self.height and x - 1 >= 0 else None
+					self.cells[z][y][x].link_fur = self.cells[z+1][y+1][x+1] if z + 1 < self.width and y + 1 < self.height and x + 1 < self.length else None
+					self.cells[z][y][x].link_fdl = self.cells[z+1][y-1][x-1] if z + 1 < self.width and y - 1 >= 0 and x - 1 >= 0 else None 
+					self.cells[z][y][x].link_fdr = self.cells[z+1][y-1][x+1] if z + 1 < self.width and y - 1 >= 0 and x + 1 < self.length else None
+					self.cells[z][y][x].link_bul = self.cells[z-1][y+1][x-1] if z - 1 >= 0 and y + 1 < self.height and x - 1 >= 0 else None
+					self.cells[z][y][x].link_bur = self.cells[z-1][y+1][x+1] if z - 1 >= 0 and y + 1 < self.height and x + 1 < self.length else None
+					self.cells[z][y][x].link_bdl = self.cells[z-1][y-1][x-1] if z - 1 >= 0 and y - 1 >= 0 and x - 1 >= 0 else None
+					self.cells[z][y][x].link_bdr = self.cells[z-1][y-1][x+1] if z - 1 >= 0 and y - 1 >= 0 and x + 1 < self.length else None
 			
 
