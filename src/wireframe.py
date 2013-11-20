@@ -13,6 +13,7 @@ class WireFrameGrid:
 		self.width = width
 		self.height = height
 		self.frame = frame()
+		self.outline = frame()
 		self.visible = visible
 		self.thickness = thickness
 		self.pos = pos
@@ -38,15 +39,24 @@ class WireFrameGrid:
 		self.z = pos[2]
 
 	def set_visibility(self, val):
+		"""
+		Change visibility of the grid
+		"""
 		self.visible = val
 		self.frame.visible = self.visible
+
+	def set_outline_visibility(self, val):
+		"""
+		Change visibility of outline
+		"""
+		self.outline.visible = val
 	
 	def generate(self):
 		"""
 		Render the curves that make up the 3D Grid
 		"""
 		sref = self.scale/2.0
-
+		outline_curves = list()
 		# Lines from back to front
 		mult = 0
 		yval = self.y+self.height*sref
@@ -54,9 +64,19 @@ class WireFrameGrid:
 			if self.animate_gen: rate(self.animate_rate)
 			for x in xrange(self.length+1):
 				if self.animate_gen: rate(self.animate_rate)
-				curve(pos=[(self.x-self.length*sref+sref*mult, yval, self.z+self.width*sref),
+				c = curve(pos=[(self.x-self.length*sref+sref*mult, yval, self.z+self.width*sref),
 						   (self.x-self.length*sref+sref*mult, yval, self.z-self.width*sref)],
 					frame=self.frame, radius=self.thickness, material=self.material, color=self.color)
+
+				if (y == 0 and x == 0):
+					outline_curves.append(c)
+				elif (y == self.height and x == self.length):
+					outline_curves.append(c)
+				elif (y == 0 and x == self.length):
+					outline_curves.append(c)
+				elif (y == self.height and x == 0):
+					outline_curves.append(c)
+
 				mult += 2
 			yval -= sref*2
 			mult = 0
@@ -68,9 +88,19 @@ class WireFrameGrid:
 			if self.animate_gen: rate(self.animate_rate)
 			for z in xrange(self.width+1):
 				if self.animate_gen: rate(self.animate_rate)
-				curve(pos=[(self.x-self.length*sref, yval, self.z-self.width*sref+sref*mult),
+				c = curve(pos=[(self.x-self.length*sref, yval, self.z-self.width*sref+sref*mult),
 						   (self.x+self.length*sref, yval, self.z-self.width*sref+sref*mult)],
 					frame=self.frame, radius=self.thickness, material=self.material, color=self.color)
+
+				if (y == 0 and z == 0):
+					outline_curves.append(c)
+				elif (y == self.height and z == self.width):
+					outline_curves.append(c)
+				elif (y == 0 and z == self.width):
+					outline_curves.append(c)
+				elif (y == self.height and z == 0):
+					outline_curves.append(c)
+
 				mult += 2
 			yval -= sref*2
 			mult = 0
@@ -82,9 +112,24 @@ class WireFrameGrid:
 			if self.animate_gen: rate(self.animate_rate)
 			for z in xrange(self.width+1):
 				if self.animate_gen: rate(self.animate_rate)
-				curve(pos=[(xval, self.y+self.height*sref, self.z-self.width*sref+sref*mult),
+				c = curve(pos=[(xval, self.y+self.height*sref, self.z-self.width*sref+sref*mult),
 					   (xval, self.y-self.height*sref, self.z-self.width*sref+sref*mult)],
 					frame=self.frame, radius=self.thickness, material=self.material, color=self.color)
+
+				if (z == 0 and x == 0):
+					outline_curves.append(c)
+				elif (z == self.width and x == self.length):
+					outline_curves.append(c)
+				elif (z == 0 and x == self.length):
+					outline_curves.append(c)
+				elif (z == self.width and x == 0):
+					outline_curves.append(c)
+
 				mult += 2
 			xval += sref*2
-			mult = 0				
+			mult = 0
+
+		for c in outline_curves:
+			c.frame = self.outline
+
+		self.set_visibility(self.visible)			

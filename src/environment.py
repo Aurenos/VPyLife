@@ -7,7 +7,7 @@ from wireframe import WireFrameGrid
 
 class Environment:
 	def __init__(self, length=10, width=10, height=10, grid_color=color.white, grid_material=None,
-				visible=True, thickness=0, scale=1, cell_color=color.green, cell_material=None,
+				visible=False, thickness=0, scale=1, cell_color=color.green, cell_material=None,
 				rule="23/3"):
 		self.length = length
 		self.width = width
@@ -27,7 +27,6 @@ class Environment:
 		numbers to determine how many adjacent cells are necessary to be born (activate).
 		"""
 
-
 		self.grid = WireFrameGrid(length=self.length, width=self.width, height=self.height,
 			color=self.grid_color, visible=self.visible, thickness=self.thickness, 
 			scale=self.scale, material=self.grid_material)
@@ -46,6 +45,15 @@ class Environment:
 			self.grid.set_visibility(False)
 		else:
 			self.grid.set_visibility(True)
+
+	def toggle_outline(self):
+		"""
+		Toggle the visibility of the WireFrameGrid's outline
+		"""
+		if self.grid.outline.visible:
+			self.grid.set_outline_visibility(False)
+		else:
+			self.grid.set_outline_visibility(True)
 
 	def fill_grid(self):
 		"""
@@ -111,4 +119,3 @@ class Environment:
 					self.cells[z][y][x].link_bdl = self.cells[z-1][y-1][x-1] if z - 1 >= 0 and y - 1 >= 0 and x - 1 >= 0 else None
 					self.cells[z][y][x].link_bdr = self.cells[z-1][y-1][x+1] if z - 1 >= 0 and y - 1 >= 0 and x + 1 < self.length else None
 			
-
