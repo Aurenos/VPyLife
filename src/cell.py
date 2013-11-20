@@ -21,7 +21,8 @@ class Cell(box):
 		self.id = Cell.__count
 		Cell.__count += 1
 
-		# Cell Links
+		## Cell Links
+		# Each cell has 26 adjacent cells or boundaries, one for each direction in 3D space
 		self.link_u   = None 	# Up               (+y)
 		self.link_d   = None 	# Down             (-y)
 		self.link_l   = None 	# Left             (-x)
@@ -50,10 +51,16 @@ class Cell(box):
 		self.link_bdr = None 	# Back-Down-Right  (+x, -y, -z)
 
 	def activate(self):
+		"""
+		Change the state of the cell to active
+		"""
 		self.active = True
 		self.visible = True
 
 	def deactivate(self):
+		"""
+		Change the state of the cell to inactive
+		"""
 		self.active = False
 		self.visible = False
 

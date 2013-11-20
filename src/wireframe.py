@@ -29,6 +29,9 @@ class WireFrameGrid:
 	    return self.length * self.width * self.height # The number of boxes
 
 	def set_pos(self, value):
+		"""
+		Set the position of the entire frame
+		"""
 		self.pos = value
 		self.x = pos[0]
 		self.y = pos[1]
@@ -39,6 +42,9 @@ class WireFrameGrid:
 		self.frame.visible = self.visible
 	
 	def generate(self):
+		"""
+		Render the curves that make up the 3D Grid
+		"""
 		sref = self.scale/2.0
 
 		# Lines from back to front

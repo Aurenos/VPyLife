@@ -19,7 +19,15 @@ class Environment:
 		self.scale = scale
 		self.cell_color = cell_color
 		self.cell_material = cell_material
-		self.rule = rule
+		
+		self.rule = rule 
+		"""
+		Rules are in the notation '{S}/{B}' where {S} is a string containing a list of numbers to determine
+		how many adjacent cells are necessary for a cell to survive, and {B} is a string containing a list of
+		numbers to determine how many adjacent cells are necessary to be born (activate).
+		"""
+
+
 		self.grid = WireFrameGrid(length=self.length, width=self.width, height=self.height,
 			color=self.grid_color, visible=self.visible, thickness=self.thickness, 
 			scale=self.scale, material=self.grid_material)
@@ -31,12 +39,18 @@ class Environment:
 		self.link_cells()
 
 	def toggle_grid(self):
+		"""
+		Toggle the visibilty of the WireFrameGrid
+		"""
 		if self.grid.visible:
 			self.grid.set_visibility(False)
 		else:
 			self.grid.set_visibility(True)
 
 	def fill_grid(self):
+		"""
+		Render the Cells in the appropriate places in space to fit the WireFrameGrid
+		"""
 		sref = self.scale/2.0
 		x = 1
 		y = 1
@@ -64,6 +78,9 @@ class Environment:
 		self.cells = array(c).reshape(self.width, self.height, self.length)
 
 	def link_cells(self):
+		"""
+		Assigns the 26 links for each cell in the 3D matrix.
+		"""
 		for z in xrange(self.width):
 			for y in xrange(self.height):
 				for x in xrange(self.length):
