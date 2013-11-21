@@ -1,7 +1,8 @@
 # VPyLife - Environment module
 # Kile Deal
 
-from visual import * 
+from visual import color, materials, rate
+from numpy import array
 from cell import Cell
 from wireframe import WireFrameGrid
 
