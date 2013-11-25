@@ -10,6 +10,7 @@ class Environment:
 	def __init__(self, length=10, width=10, height=10, grid_color=color.white, grid_material=None,
 				visible=False, thickness=0, scale=1, cell_color=color.green, cell_material=None,
 				rule="23/3"):
+		### Physical Parts ###
 		self.length = length
 		self.width = width
 		self.height = height
@@ -20,13 +21,6 @@ class Environment:
 		self.scale = scale
 		self.cell_color = cell_color
 		self.cell_material = cell_material
-		
-		self.rule = rule 
-		"""
-		Rules are in the notation '{S}/{B}' where {S} is a string containing a list of numbers to determine
-		how many adjacent cells are necessary for a cell to survive, and {B} is a string containing a list of
-		numbers to determine how many adjacent cells are necessary to be born (activate).
-		"""
 
 		self.grid = WireFrameGrid(length=self.length, width=self.width, height=self.height,
 			color=self.grid_color, visible=self.visible, thickness=self.thickness, 
@@ -37,6 +31,15 @@ class Environment:
 		self.cells = None
 		self.fill_grid()
 		self.link_cells()
+
+		### Data ###
+		"""
+		Rules are in the notation '{S}/{B}' where {S} is a string containing a list of numbers to determine
+		how many adjacent cells are necessary for a cell to survive, and {B} is a string containing a list of
+		numbers to determine how many adjacent cells are necessary to be born (activate).
+		"""
+		self.rule = rule 
+		
 
 	@property 
 	def survival_conditions(self):
