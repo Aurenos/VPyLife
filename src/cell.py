@@ -19,6 +19,7 @@ class Cell(box):
 		self.visible = visible
 		self.active = active
 		self.id = Cell.__count
+		self.age = 0
 		Cell.__count += 1
 
 		## Cell Links
@@ -73,6 +74,7 @@ class Cell(box):
 		"""
 		self.active = True
 		self.visible = True
+		self.age = 1
 
 	def deactivate(self):
 		"""
@@ -80,6 +82,7 @@ class Cell(box):
 		"""
 		self.active = False
 		self.visible = False
+		self.age = 0
 
 	def __str__(self):
 		return "Cell %3d" % self.id
