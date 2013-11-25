@@ -38,7 +38,8 @@ class Environment:
 		how many adjacent cells are necessary for a cell to survive, and {B} is a string containing a list of
 		numbers to determine how many adjacent cells are necessary to be born (activate).
 		"""
-		self.rule = rule 
+		self.rule = rule
+		self.generation = 1 
 		
 
 	@property 
@@ -48,6 +49,22 @@ class Environment:
 	@property 
 	def birth_conditions(self):
 		return [int(s) for s in self.rule.split('/')[1]]
+
+	def get_next_gen(self):
+		kill_list = []
+		birth_list = []
+		for cell in self.cells.flatten():
+			if cell.active:
+				if cell.active_links not in self.survival_conditions:
+					kill_list.append(cell)
+			else:
+				if cell.active_links in self.birth_conditions:
+					birth_list.append(cell)
+
+		for cell in kill_list:  cell.deactivate() 
+		for cell in birth_list: cell.activate()
+		self.generation += 1  
+
 
 	def toggle_grid(self):
 		"""
