@@ -50,6 +50,23 @@ class Cell(box):
 		self.link_bdl = None 	# Back-Down-Left   (-x, -y, -z)
 		self.link_bdr = None 	# Back-Down-Right  (+x, -y, -z)
 
+	@property
+	def links(self):
+		return [self.link_u, self.link_d, self.link_l, self.link_r, self.link_f, self.link_b,
+				self.link_ul, self.link_ur, self.link_dl, self.link_dr, self.link_fu, self.link_fd, 
+				self.link_fl, self.link_fr, self.link_bu, self.link_bd, self.link_bl, self.link_br, 
+				self.link_ful, self.link_fur, self.link_fdl, self.link_fdr, self.link_bul, self.link_bur, 
+				self.link_bdl, self.link_bdr]
+
+	@property 
+	def active_links(self):
+		total = 0
+		for link in self.links:
+			if link != None:
+				if link.active:
+					total += 1
+		return total
+
 	def activate(self):
 		"""
 		Change the state of the cell to active

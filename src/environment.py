@@ -38,6 +38,14 @@ class Environment:
 		self.fill_grid()
 		self.link_cells()
 
+	@property 
+	def survival_conditions(self):
+		return [int(s) for s in self.rule.split('/')[0]]
+
+	@property 
+	def birth_conditions(self):
+		return [int(s) for s in self.rule.split('/')[1]]
+
 	def toggle_grid(self):
 		"""
 		Toggle the visibilty of the WireFrameGrid
