@@ -62,13 +62,13 @@ class Environment:
 				else:
 					cell.age += 1
 					if cell.age >= 8:
-						cell.color = age_colors[4]
-					elif cell.age >= 6:
 						cell.color = age_colors[3]
-					elif cell.age >= 4:
+					elif cell.age >= 6:
 						cell.color = age_colors[2]
-					elif cell.age >= 2:
+					elif cell.age >= 4:
 						cell.color = age_colors[1]
+					elif cell.age >= 2:
+						cell.color = age_colors[0]
 			else:
 				if cell.active_links in self.birth_conditions:
 					birth_list.append(cell)
