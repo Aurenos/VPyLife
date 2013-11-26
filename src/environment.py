@@ -1,7 +1,7 @@
 # VPyLife - Environment module
 # Kile Deal
 
-from visual import color, materials, rate
+from visual import color, materials, rate, label
 from numpy import array
 from cell import Cell
 from wireframe import WireFrameGrid
@@ -9,7 +9,7 @@ from wireframe import WireFrameGrid
 class Environment:
 	def __init__(self, length=10, width=10, height=10, grid_color=color.white, grid_material=None,
 				visible=False, thickness=0, scale=1, cell_color=color.green, cell_material=None,
-				rule="23/3"):
+				rule="23/3", gen_rate=1):
 		### Physical Parts ###
 		self.length = length
 		self.width = width
@@ -39,8 +39,8 @@ class Environment:
 		numbers to determine how many adjacent cells are necessary to be born (activate).
 		"""
 		self.rule = rule
-		self.generation = 1 
-		
+		self.generation = 1
+		self.gen_rate = gen_rate 		
 
 	@property 
 	def survival_conditions(self):
@@ -63,8 +63,7 @@ class Environment:
 
 		for cell in kill_list:  cell.deactivate() 
 		for cell in birth_list: cell.activate()
-		self.generation += 1  
-
+		self.generation += 1
 
 	def toggle_grid(self):
 		"""
