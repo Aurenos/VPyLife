@@ -6,6 +6,8 @@ from numpy import array
 from cell import Cell
 from wireframe import WireFrameGrid
 
+age_colors = ((0.08,0.81,0.0), (0.16,0.62,0.0), (0.24,0.43,0.0), (0.32,0.24,0.0))
+
 class Environment:
 	def __init__(self, length=10, width=10, height=10, grid_color=color.white, grid_material=None,
 				visible=False, thickness=0, scale=1, cell_color=color.green, cell_material=None,
@@ -57,6 +59,16 @@ class Environment:
 			if cell.active:
 				if cell.active_links not in self.survival_conditions:
 					kill_list.append(cell)
+				else:
+					cell.age += 1
+					if cell.age == 2:
+						cell.color = age_colors[0]
+					elif cell.age == 4:
+						cell.color = age_colors[1]
+					elif cell.age == 6:
+						cell.color = age_colors[2]
+					elif cell.age == 8:
+						cell.color = age_colors[3]
 			else:
 				if cell.active_links in self.birth_conditions:
 					birth_list.append(cell)

@@ -83,6 +83,7 @@ class Cell(box):
 		self.active = False
 		self.visible = False
 		self.age = 0
+		self.color = color.green
 
 	def __str__(self):
 		return "Cell %3d" % self.id
