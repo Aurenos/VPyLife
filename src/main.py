@@ -62,12 +62,17 @@ def main():
 	grid = wx.Button(p, label="Toggle Wireframe Grid", pos=(DISP_WIDTH+d*2, seed_txt.Position.Get()[1]+d*4), size=(240, 25))
 	outline = wx.Button(p, label="Toggle Outline", pos=(DISP_WIDTH+d*2, grid.Position.Get()[1]+d*4), size=(240,25))
 
-	# Play, Next, and Previous
-	previous = wx.Button(p, label="Previous", pos=(DISP_WIDTH+d*2, DISP_HEIGHT-d*5), size=(100, 60))
+	# Play, Next, Previous, and Rate control
+
+	rate_txt = wx.StaticText(p, label="Rate:", pos=(DISP_WIDTH+d*2, DISP_HEIGHT-d*2))
+	rate_txt.SetFont(font)
+	rate_ctrl = wx.Slider(p, pos=(rate_txt.Position.Get()[0]+rate_txt.Size.Get()[0], rate_txt.Position.Get()[0]-d*4),
+		minValue=1, value=1, maxValue=20, size=(320, 25))
+	
+	previous = wx.Button(p, label="Previous", pos=(rate_txt.Position.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
 	previous.Disable()
-	play = wx.Button(p, label="Start", pos=(previous.Position.Get()[0]+previous.Size.Get()[0], DISP_HEIGHT-d*5), size=(150, 60))
-	next = wx.Button(p, label="Next", pos=(play.Position.Get()[0]+play.Size.Get()[0], DISP_HEIGHT-d*5), size=(100, 60))
-	next.Disable()
+	play = wx.Button(p, label="Start", pos=(previous.Position.Get()[0]+previous.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(150, 60))
+	next = wx.Button(p, label="Next", pos=(play.Position.Get()[0]+play.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
 
 	gen_ctrl_txt = wx.StaticText(p, pos=(play.Position.Get()[0]+1, previous.Position.Get()[1]-d*4), label="Generation Control")
 	gen_ctrl_txt.SetFont(header)
