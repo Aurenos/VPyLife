@@ -30,6 +30,8 @@ def main():
 	## GUI Setup
 	win = window(menus=True, title="VPyLife - Generation: 0 - Rule: 23/3", x=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)/2-WIN_WIDTH/2, 
 		y=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)/2-WIN_HEIGHT/2, width=WIN_WIDTH, height=WIN_HEIGHT)
+	win.win.SetMinSize((WIN_WIDTH, WIN_HEIGHT))
+	win.win.SetMaxSize((WIN_WIDTH, WIN_HEIGHT))
 	disp = display(window=win, x=d, y=d, height=DISP_HEIGHT, width=DISP_WIDTH)
 
 	p = win.panel
