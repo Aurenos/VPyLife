@@ -36,6 +36,7 @@ def new_generation():
 	global life_seed
 	global environ
 	environ.clear_grid()
+	environ.generation = 1
 	seed(life_seed)
 	amt = randint(1,ceil(environ.grid.volume/randint(3,10)))
 	cells = environ.cells.flatten()
