@@ -6,6 +6,8 @@ import wx
 from environment import Environment
 from random import seed
 
+environ = Environment()
+
 def set_rule(r):
 	pass
 
@@ -80,7 +82,7 @@ def main():
 	gen_ctrl_txt.SetFont(header)
 
 	# Rendering
-	environment = Environment()
+	environ.render()
 	
 
 if __name__ == '__main__':
