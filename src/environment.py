@@ -123,6 +123,10 @@ class Environment:
 
 		self.cells = array(c).reshape(self.size, self.size, self.size)
 
+	def clear_grid(self):
+		for c in self.cells.flatten():
+			c.deactivate()
+
 	def link_cells(self):
 		"""
 		Assigns the 26 links for each cell in the 3D matrix.

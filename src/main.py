@@ -3,7 +3,8 @@
 
 from visual import window, display
 from environment import Environment
-from random import seed
+from random import seed, randint
+from math import ceil
 import wx, re
 
 ### Global variables ###
@@ -31,6 +32,17 @@ def update_title():
 	_title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
 	win.win.SetTitle(_title)
 
+def new_generation():
+	global life_seed
+	global environ
+	environ.clear_grid()
+	seed(life_seed)
+	amt = randint(1,ceil(environ.grid.volume/5))
+	cells = environ.cells.flatten()
+	for i in xrange(amt):
+		c = cells[randint(0, len(cells)-1)]
+		c.activate()
+
 def set_rule(evt):
 	global rule
 	global environ
@@ -51,12 +63,31 @@ def set_environ_size(evt):
 	global environ
 	try:
 		val = abs(int(env_txtctrl.GetValue().replace(" ","")))
+		environ.clear_grid()
 		environ.grid.set_visibility(False)
 		environ.grid.set_outline_visibility(False)
 		environ = Environment(size=val)
 		environ.render()
+		new_generation()
 	except ValueError:
 		show_error("Invalid value for Environment Size. Please enter an integer.")
+
+def set_seed(evt):
+	global life_seed
+	global environ
+	val = seed_txtctrl.GetValue()
+	if val == "":
+		life_seed = None
+	else:
+		life_seed = seed_txtctrl.GetValue()
+		environ.generation = 1
+		new_generation()
+		update_title()
+
+def next_generation(evt):
+	global environ
+	environ.get_next_gen()
+	update_title()
 
 def tg_grid(evt):
 	global environ
@@ -99,6 +130,7 @@ seed_txtctrl = wx.TextCtrl(p, pos=(seed_txt.Position.Get()[0]+seed_txt.Size.Get(
 	size=(162,22), style=wx.ALIGN_RIGHT)
 seed_txtctrl.SetFont(font)
 seed_set = wx.Button(p, label="Set Seed", pos=(seed_txtctrl.Position.Get()[0]+seed_txtctrl.Size.Get()[0]+d, seed_txtctrl.Position.Get()[1]-2))
+seed_set.Bind(wx.EVT_BUTTON, set_seed)
 
 # Grid Toggle Buttons
 grid = wx.Button(p, label="Toggle Wireframe Grid", pos=(DISP_WIDTH+d*2, seed_txt.Position.Get()[1]+d*4), size=(240, 25))
@@ -118,9 +150,11 @@ previous = wx.Button(p, label="Previous", pos=(rate_txt.Position.Get()[0], rate_
 previous.Disable()
 play = wx.Button(p, label="Start", pos=(previous.Position.Get()[0]+previous.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(150, 60))
 next = wx.Button(p, label="Next", pos=(play.Position.Get()[0]+play.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
+next.Bind(wx.EVT_BUTTON, next_generation)
 
 gen_ctrl_txt = wx.StaticText(p, pos=(play.Position.Get()[0]+1, previous.Position.Get()[1]-d*4), label="Generation Control")
 gen_ctrl_txt.SetFont(header)
 
 # Rendering
 environ.render()
+new_generation()
