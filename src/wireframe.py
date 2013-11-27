@@ -12,8 +12,8 @@ class WireFrameGrid:
 		self.length = length
 		self.width = width
 		self.height = height
-		self.frame = frame()
-		self.outline = frame()
+		self.frame = None
+		self.outline = None
 		self.visible = visible
 		self.thickness = thickness
 		self.pos = pos
@@ -55,6 +55,10 @@ class WireFrameGrid:
 		"""
 		Render the curves that make up the 3D Grid
 		"""
+
+		self.frame = frame()
+		self.outline = frame()
+
 		sref = self.scale/2.0
 		outline_curves = list()
 		# Lines from back to front

@@ -11,7 +11,7 @@ age_colors = ((0.08,0.81,0.0), (0.16,0.62,0.0), (0.24,0.43,0.0), (0.32,0.24,0.0)
 class Environment:
 	def __init__(self, size=10, grid_color=color.white, grid_material=None,
 				visible=False, thickness=0, scale=1, cell_color=color.green, cell_material=None,
-				rule="23/3", gen_rate=1):
+				rule="23/3"):
 		### Physical Parts ###
 		self.size = size
 		self.grid_color = grid_color
@@ -36,7 +36,6 @@ class Environment:
 		"""
 		self.rule = rule
 		self.generation = 1
-		self.gen_rate = gen_rate
 
 	@property 
 	def survival_conditions(self):

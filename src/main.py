@@ -2,23 +2,16 @@
 # Kile Deal
 
 from visual import window, display
-import wx
 from environment import Environment
 from random import seed
+import wx, re
 
+### Global variables ###
 environ = Environment()
-
-def set_rule(r):
-	pass
-
-def set_rate(x):
-	pass
-
-def toggle_grid():
-	pass
-
-def toggle_outline():
-	pass
+life_seed = None
+rule = "23/3"
+gen_rate = 1
+_title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
 
 WIN_WIDTH    = 1024
 WIN_HEIGHT   = 680
@@ -27,63 +20,107 @@ DISP_WIDTH   = 600
 font = wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
 header = wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
 d = 10 # Widget distance offset
+########################
 
-def main():
-	## GUI Setup
-	win = window(menus=True, title="VPyLife - Generation: 0 - Rule: 23/3", x=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)/2-WIN_WIDTH/2, 
-		y=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)/2-WIN_HEIGHT/2, width=WIN_WIDTH, height=WIN_HEIGHT)
-	win.win.SetMinSize((WIN_WIDTH, WIN_HEIGHT))
-	win.win.SetMaxSize((WIN_WIDTH, WIN_HEIGHT))
-	disp = display(window=win, x=d, y=d, height=DISP_HEIGHT, width=DISP_WIDTH)
+def show_error(msg):
+	wx.MessageBox(msg, "Error!", wx.ICON_ERROR | wx.OK)
 
-	p = win.panel
+def update_title():
+	global _title
+	global win
+	_title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
+	win.win.SetTitle(_title)
 
-	# Rule
-	rule_txt = wx.StaticText(p, pos=(DISP_WIDTH+d*2, d), label="Rule: ", )
-	rule_txt.SetFont(font)
-	rule_txtctrl = wx.TextCtrl(p, pos=(rule_txt.Position.Get()[0]+rule_txt.Size.Get()[0], rule_txt.Position.Get()[1]),
-		size=(200,22), style=wx.ALIGN_RIGHT)
-	rule_txtctrl.SetFont(font)
-	rule_set = wx.Button(p, label="Set Rule", pos=(rule_txtctrl.Position.Get()[0]+rule_txtctrl.Size.Get()[0]+d, rule_txtctrl.Position.Get()[1]-2))
+def set_rule(evt):
+	global rule
+	global environ
+	val = str(rule_txtctrl.GetValue().replace(" ",""))
+	if re.match("[0-9]{1,10}\/[0-9]{1,10}", val):
+		rule = val
+		environ.rule = rule
+		update_title()
+	else:
+		show_error("Invalid rule string. Rule strings must be of the form {S}/{B}\nwhere {S} and {B} are strings of integers of max length 10.\n\nExample: 234/15")
 
-	# Environment Size
-	env_txt = wx.StaticText(p, pos=(DISP_WIDTH+d*2, rule_txt.Position.Get()[1]+d*4), label="Environment Size: ", )
-	env_txt.SetFont(font)
-	env_txtctrl = wx.TextCtrl(p, pos=(env_txt.Position.Get()[0]+env_txt.Size.Get()[0], env_txt.Position.Get()[1]),
-		size=(110,22), style=wx.ALIGN_RIGHT)
-	env_txtctrl.SetFont(font)
-	env_set = wx.Button(p, label="Set Size", pos=(env_txtctrl.Position.Get()[0]+env_txtctrl.Size.Get()[0]+d, env_txtctrl.Position.Get()[1]-2))
+def set_rate(evt):
+	global gen_rate
+	val = int(rate_ctrl.GetValue())
+	gen_rate = val
 
-	# Seed
-	seed_txt = wx.StaticText(p, pos=(DISP_WIDTH+d*2, env_txt.Position.Get()[1]+d*4), label="Life Seed: ", )
-	seed_txt.SetFont(font)
-	seed_txtctrl = wx.TextCtrl(p, pos=(seed_txt.Position.Get()[0]+seed_txt.Size.Get()[0], seed_txt.Position.Get()[1]),
-		size=(162,22), style=wx.ALIGN_RIGHT)
-	seed_txtctrl.SetFont(font)
-	seed_set = wx.Button(p, label="Set Seed", pos=(seed_txtctrl.Position.Get()[0]+seed_txtctrl.Size.Get()[0]+d, seed_txtctrl.Position.Get()[1]-2))
+def set_environ_size(evt):
+	global environ
+	try:
+		val = abs(int(env_txtctrl.GetValue().replace(" ","")))
+		environ.grid.set_visibility(False)
+		environ.grid.set_outline_visibility(False)
+		environ = Environment(size=val)
+		environ.render()
+	except ValueError:
+		show_error("Invalid value for Environment Size. Please enter an integer.")
 
-	# Grid Toggle Buttons
-	grid = wx.Button(p, label="Toggle Wireframe Grid", pos=(DISP_WIDTH+d*2, seed_txt.Position.Get()[1]+d*4), size=(240, 25))
-	outline = wx.Button(p, label="Toggle Outline", pos=(DISP_WIDTH+d*2, grid.Position.Get()[1]+d*4), size=(240,25))
+def tg_grid(evt):
+	global environ
+	environ.toggle_grid()
 
-	# Play, Next, Previous, and Rate control
+def tg_outline(evt):
+	global environ
+	environ.toggle_outline()
 
-	rate_txt = wx.StaticText(p, label="Rate:", pos=(DISP_WIDTH+d*2, DISP_HEIGHT-d*2))
-	rate_txt.SetFont(font)
-	rate_ctrl = wx.Slider(p, pos=(rate_txt.Position.Get()[0]+rate_txt.Size.Get()[0], rate_txt.Position.Get()[0]-d*4),
-		minValue=1, value=1, maxValue=20, size=(320, 25))
-	
-	previous = wx.Button(p, label="Previous", pos=(rate_txt.Position.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
-	previous.Disable()
-	play = wx.Button(p, label="Start", pos=(previous.Position.Get()[0]+previous.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(150, 60))
-	next = wx.Button(p, label="Next", pos=(play.Position.Get()[0]+play.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
+win = window(menus=True, title=_title, x=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)/2-WIN_WIDTH/2, 
+	y=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)/2-WIN_HEIGHT/2, width=WIN_WIDTH, height=WIN_HEIGHT)
+win.win.SetMinSize((WIN_WIDTH, WIN_HEIGHT))
+win.win.SetMaxSize((WIN_WIDTH, WIN_HEIGHT))
+disp = display(window=win, x=d, y=d, height=DISP_HEIGHT, width=DISP_WIDTH)
 
-	gen_ctrl_txt = wx.StaticText(p, pos=(play.Position.Get()[0]+1, previous.Position.Get()[1]-d*4), label="Generation Control")
-	gen_ctrl_txt.SetFont(header)
+p = win.panel
 
-	# Rendering
-	environ.render()
-	
+# Rule
+rule_txt = wx.StaticText(p, pos=(DISP_WIDTH+d*2, d), label="Rule: ", )
+rule_txt.SetFont(font)
+rule_txtctrl = wx.TextCtrl(p, pos=(rule_txt.Position.Get()[0]+rule_txt.Size.Get()[0], rule_txt.Position.Get()[1]),
+	size=(200,22), style=wx.ALIGN_RIGHT)
+rule_txtctrl.SetFont(font)
+rule_set = wx.Button(p, label="Set Rule", pos=(rule_txtctrl.Position.Get()[0]+rule_txtctrl.Size.Get()[0]+d, rule_txtctrl.Position.Get()[1]-2))
+rule_set.Bind(wx.EVT_BUTTON, set_rule)
 
-if __name__ == '__main__':
-	main()
+# Environment Size
+env_txt = wx.StaticText(p, pos=(DISP_WIDTH+d*2, rule_txt.Position.Get()[1]+d*4), label="Environment Size: ", )
+env_txt.SetFont(font)
+env_txtctrl = wx.TextCtrl(p, pos=(env_txt.Position.Get()[0]+env_txt.Size.Get()[0], env_txt.Position.Get()[1]),
+	size=(110,22), style=wx.ALIGN_RIGHT)
+env_txtctrl.SetFont(font)
+env_set = wx.Button(p, label="Set Size", pos=(env_txtctrl.Position.Get()[0]+env_txtctrl.Size.Get()[0]+d, env_txtctrl.Position.Get()[1]-2))
+env_set.Bind(wx.EVT_BUTTON, set_environ_size)
+
+# Seed
+seed_txt = wx.StaticText(p, pos=(DISP_WIDTH+d*2, env_txt.Position.Get()[1]+d*4), label="Life Seed: ", )
+seed_txt.SetFont(font)
+seed_txtctrl = wx.TextCtrl(p, pos=(seed_txt.Position.Get()[0]+seed_txt.Size.Get()[0], seed_txt.Position.Get()[1]),
+	size=(162,22), style=wx.ALIGN_RIGHT)
+seed_txtctrl.SetFont(font)
+seed_set = wx.Button(p, label="Set Seed", pos=(seed_txtctrl.Position.Get()[0]+seed_txtctrl.Size.Get()[0]+d, seed_txtctrl.Position.Get()[1]-2))
+
+# Grid Toggle Buttons
+grid = wx.Button(p, label="Toggle Wireframe Grid", pos=(DISP_WIDTH+d*2, seed_txt.Position.Get()[1]+d*4), size=(240, 25))
+grid.Bind(wx.EVT_BUTTON, tg_grid)
+outline = wx.Button(p, label="Toggle Outline", pos=(DISP_WIDTH+d*2, grid.Position.Get()[1]+d*4), size=(240,25))
+outline.Bind(wx.EVT_BUTTON, tg_outline)
+
+# Play, Next, Previous, and Rate control
+
+rate_txt = wx.StaticText(p, label="Rate:", pos=(DISP_WIDTH+d*2, DISP_HEIGHT-d*2))
+rate_txt.SetFont(font)
+rate_ctrl = wx.Slider(p, pos=(rate_txt.Position.Get()[0]+rate_txt.Size.Get()[0], rate_txt.Position.Get()[0]-d*4),
+	minValue=1, value=1, maxValue=20, size=(320, 25))
+rate_ctrl.Bind(wx.EVT_SLIDER, set_rate)
+
+previous = wx.Button(p, label="Previous", pos=(rate_txt.Position.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
+previous.Disable()
+play = wx.Button(p, label="Start", pos=(previous.Position.Get()[0]+previous.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(150, 60))
+next = wx.Button(p, label="Next", pos=(play.Position.Get()[0]+play.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
+
+gen_ctrl_txt = wx.StaticText(p, pos=(play.Position.Get()[0]+1, previous.Position.Get()[1]-d*4), label="Generation Control")
+gen_ctrl_txt.SetFont(header)
+
+# Rendering
+environ.render()
