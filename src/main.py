@@ -1,7 +1,7 @@
 # VPyLife - Main module
 # Kile Deal
 
-from visual import window, display
+from visual import window, display, rate
 from environment import Environment
 from random import seed, randint
 from math import ceil
@@ -12,6 +12,7 @@ environ = Environment()
 life_seed = None
 rule = "23/3"
 gen_rate = 1
+paused = True
 _title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
 
 WIN_WIDTH    = 1024
@@ -99,6 +100,19 @@ def tg_outline(evt):
 	global environ
 	environ.toggle_outline()
 
+def play_pause(evt):
+	global paused
+	global play
+	if paused:
+		paused = False
+		next.Disable()
+		play.SetLabel("Pause")
+	else:
+		paused = True
+		next.Enable()
+		play.SetLabel("Start")
+
+
 win = window(menus=True, title=_title, x=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)/2-WIN_WIDTH/2, 
 	y=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)/2-WIN_HEIGHT/2, width=WIN_WIDTH, height=WIN_HEIGHT)
 win.win.SetMinSize((WIN_WIDTH, WIN_HEIGHT))
@@ -150,7 +164,10 @@ rate_ctrl.Bind(wx.EVT_SLIDER, set_rate)
 
 previous = wx.Button(p, label="Previous", pos=(rate_txt.Position.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
 previous.Disable()
+
 play = wx.Button(p, label="Start", pos=(previous.Position.Get()[0]+previous.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(150, 60))
+play.Bind(wx.EVT_BUTTON, play_pause)
+
 next = wx.Button(p, label="Next", pos=(play.Position.Get()[0]+play.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
 next.Bind(wx.EVT_BUTTON, next_generation)
 
@@ -160,3 +177,11 @@ gen_ctrl_txt.SetFont(header)
 # Rendering
 environ.render()
 new_generation()
+
+while True:
+	rate(gen_rate)
+	if not paused:
+		environ.get_next_gen()
+		update_title()
+	else:
+		pass
