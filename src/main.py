@@ -36,8 +36,10 @@ def update_title():
 def new_generation():
 	global life_seed
 	global environ
+	global previous
 	environ.clear_grid()
 	environ.generation = 1
+	previous.Disable()
 	seed(life_seed)
 	amt = randint(1,ceil(environ.grid.volume/randint(3,10)))
 	cells = environ.cells.flatten()
@@ -89,7 +91,10 @@ def set_seed(evt):
 
 def next_generation(evt):
 	global environ
+	global previous
 	environ.get_next_gen()
+	if environ.generation == 2:
+		previous.Enable()
 	update_title()
 
 def tg_grid(evt):
@@ -103,13 +108,23 @@ def tg_outline(evt):
 def play_pause(evt):
 	global paused
 	global play
+	global next
+	global previous
+	global seed_set
+	global env_set
 	if paused:
 		paused = False
 		next.Disable()
+		seed_set.Disable()
+		previous.Disable()
+		env_set.Disable()
 		play.SetLabel("Pause")
 	else:
 		paused = True
 		next.Enable()
+		seed_set.Enable()
+		previous.Enable()
+		env_set.Enable()
 		play.SetLabel("Start")
 
 
