@@ -46,11 +46,17 @@ class Environment:
 		return [int(s) for s in self.rule.split('/')[1]]
 
 	def render(self):
+		"""
+		Render the 3D environment.
+		"""
 		self.grid.generate()
 		self.fill_grid()
 		self.link_cells() 		
 
 	def get_next_gen(self):
+		"""
+		Generate the next generation of cells based on the rule string.
+		"""
 		kill_list = []
 		birth_list = []
 		for cell in self.cells.flatten():
@@ -124,6 +130,9 @@ class Environment:
 		self.cells = array(c).reshape(self.size, self.size, self.size)
 
 	def clear_grid(self):
+		"""
+		Deactivate all cells in the environment.
+		"""
 		for c in self.cells.flatten():
 			c.deactivate()
 

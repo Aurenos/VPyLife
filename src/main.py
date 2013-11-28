@@ -8,14 +8,16 @@ from math import ceil
 import wx, re
 
 ### Global variables ###
+
 environ = Environment()
 life_seed = None
 rule = "23/3"
 gen_rate = 1
-gen_list = []
+gen_list = [] # To hold the previous generation states
 paused = True
 _title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
 
+# GUI stuff
 WIN_WIDTH    = 1024
 WIN_HEIGHT   = 680
 DISP_HEIGHT  = 600
@@ -23,22 +25,36 @@ DISP_WIDTH   = 600
 font = wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
 header = wx.Font(12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD)
 d = 10 # Widget distance offset
-########################
 
+#########################
+
+### GUI and Miscellaneous ###
 def show_error(msg):
+	"""
+	Display message box for improper usage errors.
+	"""
 	wx.MessageBox(msg, "Error!", wx.ICON_ERROR | wx.OK)
 
 def update_title():
+	"""
+	Sets the window title.
+	"""
 	global _title
 	global win
 	_title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
 	win.win.SetTitle(_title)
 
 def get_env_state():
+	"""
+	Return a list of the environments cells' activeness. 
+	"""
 	global environ
 	return [c.active for c in environ.cells.flatten()]
 
 def new_generation():
+	"""
+	Reset the environment with a new first generation of cells.
+	"""
 	global life_seed
 	global environ
 	global previous
@@ -47,6 +63,7 @@ def new_generation():
 	environ.generation = 1
 	previous.Disable()
 	seed(life_seed)
+	# The arbitrary method of randomly filling the environment
 	amt = randint(1,ceil(environ.grid.volume/randint(3,10)))
 	cells = environ.cells.flatten()
 	for i in xrange(amt):
@@ -54,7 +71,14 @@ def new_generation():
 		c.activate()
 	gen_list = []
 
+#########################
+
+### Event Handlers ###
+
 def set_rule(evt):
+	"""
+	Event handler for the 'Set Rule' button. Changes the environment rule.
+	"""
 	global rule
 	global environ
 	val = str(rule_txtctrl.GetValue().replace(" ",""))
@@ -66,11 +90,17 @@ def set_rule(evt):
 		show_error("Invalid rule string. Rule strings must be of the form {S}/{B}\nwhere {S} and {B} are strings of integers of max length 10.\n\nExample: 234/15")
 
 def set_rate(evt):
+	"""
+	Event handler for the 'Rate' slider. Changes the current iteration rate in the generation loop."
+	"""
 	global gen_rate
 	val = int(rate_ctrl.GetValue())
 	gen_rate = val
 
 def set_environ_size(evt):
+	"""
+	Event handler for the 'Set Size' button. Resets and changes the size of the environment.
+	"""
 	global environ
 	try:
 		val = abs(int(env_txtctrl.GetValue().replace(" ","")))
@@ -85,6 +115,9 @@ def set_environ_size(evt):
 		show_error("Invalid value for Environment Size. Please enter an integer.")
 
 def set_seed(evt):
+	"""
+	Event handler for the 'Set Seed' button. Resets the environment with the new seed.
+	"""
 	global life_seed
 	global environ
 	val = seed_txtctrl.GetValue()
@@ -97,6 +130,9 @@ def set_seed(evt):
 		update_title()
 
 def next_generation(evt):
+	"""
+	Event handler for the 'Next' button. Generates the next cell generation.
+	"""
 	global environ
 	global previous
 	gen_list.append(get_env_state())
@@ -106,6 +142,9 @@ def next_generation(evt):
 	update_title()
 
 def prev_generation(evt):
+	"""
+	Event handler for the 'Previous' button. Backtracks through the previous cell generations.
+	"""
 	global environ
 	global previous
 	global gen_list
@@ -121,14 +160,24 @@ def prev_generation(evt):
 		previous.Disable()
 
 def tg_grid(evt):
+	"""
+	Event handler for the 'Toggle Wireframe Grid' button. Self explanatory...
+	"""
 	global environ
 	environ.toggle_grid()
 
 def tg_outline(evt):
+	"""
+	Event handler for the 'Toggle Outline' button. Also self explanatory...
+	"""
 	global environ
 	environ.toggle_outline()
 
 def play_pause(evt):
+	"""
+	Event handler for the 'Start/Pause' button. Starts or pauses the the automatic generation
+	of cell generations.
+	"""
 	global paused
 	global play
 	global next
@@ -150,14 +199,17 @@ def play_pause(evt):
 		env_set.Enable()
 		play.SetLabel("Start")
 
+#########################
+
+######## GUI Code #######
 
 win = window(menus=True, title=_title, x=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_X)/2-WIN_WIDTH/2, 
 	y=wx.SystemSettings.GetMetric(wx.SYS_SCREEN_Y)/2-WIN_HEIGHT/2, width=WIN_WIDTH, height=WIN_HEIGHT)
-win.win.SetMinSize((WIN_WIDTH, WIN_HEIGHT))
-win.win.SetMaxSize((WIN_WIDTH, WIN_HEIGHT))
+win.win.SetMinSize((WIN_WIDTH, WIN_HEIGHT)) # The VPython window object doesn't inherit from the wx.Frame,
+win.win.SetMaxSize((WIN_WIDTH, WIN_HEIGHT)) # but rather *has* a frame, which happens to be called 'win'
 disp = display(window=win, x=d, y=d, height=DISP_HEIGHT, width=DISP_WIDTH)
 
-p = win.panel
+p = win.panel # Panel to hold controls
 
 # Rule
 rule_txt = wx.StaticText(p, pos=(DISP_WIDTH+d*2, d), label="Rule: ", )
@@ -213,7 +265,9 @@ next.Bind(wx.EVT_BUTTON, next_generation)
 gen_ctrl_txt = wx.StaticText(p, pos=(play.Position.Get()[0]+1, previous.Position.Get()[1]-d*4), label="Generation Control")
 gen_ctrl_txt.SetFont(header)
 
-# Rendering
+#########################
+
+# Initial Rendering
 environ.render()
 new_generation()
 
