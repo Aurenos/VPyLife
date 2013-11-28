@@ -16,11 +16,4 @@ Cells show age by changing color slowly from green to brown the longer they rema
 ----------
 
 
-### Good Parameter Sets
-
-*These are parameters that make for interesting or fun generations.*
-
-**Rule** | **Environment Size** | **Seed** 
-
-- 23/3 | 10 | qpwrighqpew8rgh
-- 23/3 | 50 | kile
+Visit the [Wiki](https://github.com/Aurenos/VPyLife/wiki) for screenshots and a list of good parameter sets.
