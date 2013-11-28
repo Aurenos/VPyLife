@@ -12,6 +12,7 @@ environ = Environment()
 life_seed = None
 rule = "23/3"
 gen_rate = 1
+gen_list = []
 paused = True
 _title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
 
@@ -33,10 +34,15 @@ def update_title():
 	_title = "VPyLife - Generation: {0} - Rule: {1}".format(environ.generation, rule)
 	win.win.SetTitle(_title)
 
+def get_env_state():
+	global environ
+	return [c.active for c in environ.cells.flatten()]
+
 def new_generation():
 	global life_seed
 	global environ
 	global previous
+	global gen_list
 	environ.clear_grid()
 	environ.generation = 1
 	previous.Disable()
@@ -46,6 +52,7 @@ def new_generation():
 	for i in xrange(amt):
 		c = cells[randint(0, len(cells)-1)]
 		c.activate()
+	gen_list = []
 
 def set_rule(evt):
 	global rule
@@ -92,10 +99,26 @@ def set_seed(evt):
 def next_generation(evt):
 	global environ
 	global previous
+	gen_list.append(get_env_state())
 	environ.get_next_gen()
 	if environ.generation == 2:
 		previous.Enable()
 	update_title()
+
+def prev_generation(evt):
+	global environ
+	global previous
+	global gen_list
+	gen = gen_list.pop()[::-1]
+	environ.clear_grid()
+	for cell in environ.cells.flatten():
+		live = gen.pop()
+		if live:
+			cell.activate()
+	environ.generation -= 1
+	update_title()
+	if environ.generation <= 1:
+		previous.Disable()
 
 def tg_grid(evt):
 	global environ
@@ -178,6 +201,7 @@ rate_ctrl = wx.Slider(p, pos=(rate_txt.Position.Get()[0]+rate_txt.Size.Get()[0],
 rate_ctrl.Bind(wx.EVT_SLIDER, set_rate)
 
 previous = wx.Button(p, label="Previous", pos=(rate_txt.Position.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(100, 60))
+previous.Bind(wx.EVT_BUTTON, prev_generation)
 previous.Disable()
 
 play = wx.Button(p, label="Start", pos=(previous.Position.Get()[0]+previous.Size.Get()[0], rate_txt.Position.Get()[1]-d*7), size=(150, 60))
@@ -197,6 +221,7 @@ while True:
 	rate(gen_rate)
 	if not paused:
 		environ.get_next_gen()
+		gen_list.append(get_env_state())
 		update_title()
 	else:
 		pass
