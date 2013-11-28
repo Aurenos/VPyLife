@@ -70,6 +70,7 @@ def set_environ_size(evt):
 		environ = Environment(size=val)
 		environ.render()
 		new_generation()
+		update_title()
 	except ValueError:
 		show_error("Invalid value for Environment Size. Please enter an integer.")
 
