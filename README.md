@@ -11,6 +11,8 @@ The environment size is a single positive integer which determines the volume of
 
 Cells show age by changing color slowly from green to brown the longer they remain active.
 
+*Note: If for some reason when you run it the rendering panel doesn't appear, just keep restarting until it does. I have yet to figure out why it does that.*
+
 ----------
 
 
