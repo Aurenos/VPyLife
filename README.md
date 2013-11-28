@@ -17,3 +17,10 @@ Cells show age by changing color slowly from green to brown the longer they rema
 
 
 Visit the [Wiki](https://github.com/Aurenos/VPyLife/wiki) for screenshots and a list of good parameter sets.
+
+
+----------
+
+#### Requirements
+
+VPyLife requires VPython-wx (VPython 6.05) and Python 2.7.5.
